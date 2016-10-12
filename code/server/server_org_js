@@ -1,0 +1,156 @@
+var express = require('express'),
+    app = express(),
+    bodyParser = require('body-parser'),
+    morgan = require('morgan'),
+    path = require('path'),
+    soap = require('soap');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.use(morgan('dev'));
+
+var cybersourceUrl = "https://ics2wstest.ic3.com/commerce/1.x/transactionProcessor/CyberSourceTransaction_1.93.wsdl";
+var merchantID = "rangle_dev";
+var transactionKey = "5kMTvJbzUdlgZTNcmfu0rqk1ZJ7ehUriTE55HUP1msawpoC48DYZjuwwTP7LP0E66fvt/saWwKDhoaiRwDbBUfl8klP3AowI+aO5rB3SjX+yoh/Y0Y8ZAxXoAIulXcd7QOzjeVXLjc1xKK+izRfkvOgKATtsYgRvzGtZHUNhUJiMXgcBExuQSqh9nw/HlFZHAA7fKgpe0Zm2jc2kieOPul08QLKEAUWxgIpiELAx8g3F5ui83t/5YeYumzw/cxZmzlehPQNIbvXc/r7FU7BUoep/MQkBSgjYBlx0E2Fe05moDC0SVKIL5D+XS/zn0bLsR2Ql3ZbmF2FbjqJkSuC0vQ==";
+
+app.get('/api/capture', function (req, res) {
+    soap.createClient(cybersourceUrl, function (err, client) {
+        client.setSecurity(new soap.WSSecurity(merchantID, transactionKey));
+
+        var data = {
+            merchantID: merchantID,
+            merchantReferenceCode: "TEST",
+            clientLibrary: 'node.js',
+            purchaseTotals: {
+                currency: "USD",
+                grandTotalAmount: 11.35
+            },
+            ccCaptureService: {
+                attributes: {
+                    run: true,
+                },
+                authRequestID: "4756900151956784004012"
+            }
+        };
+        client.runTransaction(data, function (err, result) {
+            if (err)
+                res.send(err);
+
+            res.send(result);
+        });
+    });
+});
+
+app.get('/api/createProfile', function (req, res) {
+    soap.createClient(cybersourceUrl, function (err, client) {
+        client.setSecurity(new soap.WSSecurity(merchantID, transactionKey));
+
+        var data = {
+            merchantID: merchantID,
+            merchantReferenceCode: "TEST",
+            clientLibrary: 'node.js',
+            billTo: {
+                firstName: "Sonu",
+                lastName: "Kapoor",
+                street1: "129 Spadina Av",
+                city: "Toronto",
+                state: "ON",
+                postalCode: "M5V 2L3",
+                country: "CA",
+                email: "sonu.kapoor@rangle.io"
+            },
+            purchaseTotals: {
+                currency: "USD",
+                grandTotalAmount: 0.00
+            },
+            card: {
+                accountNumber: "4111111111111111",
+                expirationMonth: "12",
+                expirationYear: "2016",
+                cardType: "001"
+            },
+            recurringSubscriptionInfo: {
+                frequency: 'on-demand'
+            },
+            ccAuthService: {
+                attributes: {
+                    run: true,
+                }
+            },
+            ccCaptureService: {
+                attributes: {
+                    run: true,
+                }
+            },
+            paySubscriptionCreateService: {
+                attributes: {
+                    run: true,
+                }
+            }
+        };
+        client.runTransaction(data, function (err, result) {
+            if (err)
+                res.send(err);
+
+            res.send(result);
+        });
+    });
+});
+
+app.get('/api/authorize', function (req, res) {
+    soap.createClient(cybersourceUrl, function (err, client) {
+        client.setSecurity(new soap.WSSecurity(merchantID, transactionKey));
+
+        var data = {
+            merchantID: merchantID,
+            merchantReferenceCode: "TEST",
+            clientLibrary: 'node.js',
+            billTo: {
+                firstName: "Sonu",
+                lastName: "Kapoor",
+                street1: "129 Spadina Av",
+                city: "Toronto",
+                state: "ON",
+                postalCode: "M5V 2L3",
+                country: "CA",
+                email: "sonu.kapoor@rangle.io"
+            },
+            item: {
+                attributes: {
+                    id: 0
+                },
+                unitPrice: 10.35,
+                quantity: 2,
+                productCode: '2001',
+                productName: 'Blank T-Shirt',
+                productSKU: "20010102"
+            },
+            purchaseTotals: {
+                currency: "USD",
+                grandTotalAmount: 10
+            },
+            card: {
+                accountNumber: "4111111111111111",
+                expirationMonth: "12",
+                expirationYear: "2016",
+                cvNumber: "122",
+                cardType: "001"
+            },
+            ccAuthService: {
+                attributes: {
+                    run: true,
+                }
+            }
+        };
+        client.runTransaction(data, function (err, result) {
+            if (err)
+                res.send(err);
+
+            res.send(result);
+        });
+    });
+});
+
+app.listen(8000);
+console.log('Server is running on 8000');

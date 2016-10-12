@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/22b7593283011f581accc470c0b6d2dc146751fe/soap/soap.d.ts",
+    "raw": "registry:dt/soap#0.0.0+20160830123121",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/22b7593283011f581accc470c0b6d2dc146751fe/soap/soap.d.ts"
+  }
+}

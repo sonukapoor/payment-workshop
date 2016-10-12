@@ -1,0 +1,24 @@
+{
+  "name": "cybersource",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "morgan": "^1.7.0",
+    "path": "^0.12.7",
+    "soap": "^0.17.0",
+    "supervisor": "^0.11.0",
+    "ts-loader": "^0.9.0"
+  },
+  "dependencies": {
+    "typings": "^1.4.0"
+  }
+}

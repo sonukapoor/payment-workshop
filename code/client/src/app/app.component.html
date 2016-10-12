@@ -1,0 +1,256 @@
+<div class="container">
+
+	<div class="row">
+		<div class="col-xs-6">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<div class="margin-20">
+				<h4>{{title}}</h4>
+			</div>
+			<form [formGroup]="paymentForm">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<span>Payment Processor</span>
+					</div>
+					<div class="panel-body">
+						<div class="form-group col-xs-6">
+							<select class="form-control">
+                <option>Cybersource</option>
+                <option>Paypal</option>
+                <option>BrainTree</option>
+              </select>
+						</div>
+					</div>
+				</div>
+
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#1" data-toggle="tab">Authorize</a>
+					</li>
+					<li class="nav">
+						<a href="#2" data-toggle="tab">Capture</a>
+					</li>
+				</ul>
+
+				<div class="tab-content ">
+          <!-- Authorize Form -->
+					<div class="tab-pane fade in active" id="1">
+						<div class="panel panel-default" formGroupName="billTo">
+							<div class="panel-heading">
+								<span>Billing Address</span>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="firstName">First Name</label>
+										<input class="form-control" type="text" name="firstName" id="firstName" [formControl]="firstName">
+										<div [hidden]="firstName.valid || firstName.untouched" class="text-danger">
+											<small [hidden]="!firstName.hasError('required')">First name is required.</small>
+										</div>
+									</div>
+									<div class="form-group col-xs-6">
+										<label for="lastName">Last Name</label>
+										<input class="form-control" type="input" name="lastName" id="lastName" [formControl]="lastName">
+										<div [hidden]="lastName.valid || lastName.untouched" class="text-danger">
+											<small [hidden]="!lastName.hasError('required')">Last name is required.</small>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="street1">Street</label>
+										<input class="form-control" type="text" name="street1" id="street1" [formControl]="street1">
+										<div [hidden]="street1.valid || street1.untouched" class="text-danger">
+											<small [hidden]="!street1.hasError('required')">Street name is required.</small>
+										</div>
+									</div>
+									<div class="form-group col-xs-6">
+										<label for="city">City</label>
+										<input class="form-control" type="text" name="city" id="city" [formControl]="city">
+										<div [hidden]="city.valid || city.untouched" class="text-danger">
+											<small [hidden]="!city.hasError('required')">City is required.</small>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="state">State</label>
+										<input class="form-control" type="input" name="state" [value]="state.value.toUpperCase()" id="state" [formControl]="state"
+											[attr.maxlength]="2">
+										<div [hidden]="state.valid || state.untouched" class="text-danger">
+											<small [hidden]="!state.hasError('required')">State is required.</small>
+										</div>
+									</div>
+									<div class="form-group col-xs-6">
+										<label for="postalCode">Postal Code / Zip</label>
+										<input class="form-control" type="text" name="postalCode" id="postalCode" [formControl]="postalCode" [attr.maxlength]="6">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="country">Country</label>
+										<input class="form-control" type="input" name="country" [value]="country.value.toUpperCase()" id="country" [formControl]="country"
+											[attr.maxlength]="2">
+									</div>
+									<div class="form-group col-xs-6">
+										<label for="email">Email</label>
+										<input class="form-control" type="text" name="email" id="email" [formControl]="email">
+										<div [hidden]="email.valid || email.untouched" class="text-danger">
+											<small [hidden]="!email.hasError('required')">Email is required.</small>
+											<small [hidden]="!email.hasError('invalidEmailAddress')">Email is invalid.</small>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel panel-default" formGroupName="card">
+							<div class="panel-heading">
+								<span>Credit Card</span>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="accountNumber">Credit Card Number</label>
+										<input class="form-control" type="text" name="accountNumber" id="accountNumber" (keydown)="numberOnly($event)" [attr.maxlength]="16"
+											[formControl]="accountNumber" placeholder="4111111111111111">
+										<div [hidden]="accountNumber.valid || accountNumber.untouched" class="text-danger">
+											<small [hidden]="!accountNumber.hasError('required')">Credit Card is required.</small>
+											<small [hidden]="!accountNumber.hasError('invalidCreditCard')">Credit Card is invalid.</small>
+										</div>
+									</div>
+									<div class="form-group col-xs-6">
+										<label for="expirationMonth">Expiration Month / Year</label>
+										<input class="form-control" type="text" name="expirationMonth" id="expirationMonth" [formControl]="expirationMonth" placeholder="MM/YYYY"
+											(keydown)="maskExpirationMonth($event)" [attr.maxLength]="7">
+										<div [hidden]="expirationMonth.valid || expirationMonth.untouched" class="text-danger">
+											<small [hidden]="!expirationMonth.hasError('required')">Expiry month / year is required.</small>
+											<small [hidden]="!expirationMonth.hasError('invalidMonthYear')">Expiry month / year is invalid.</small>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="expirationMonth">CVV</label>
+										<input class="form-control" type="text" name="cvNumber" id="cvNumber" [formControl]="cvNumber" (keydown)="numberOnly($event)"
+											[attr.maxlength]="4">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="panel panel-default" formGroupName="item">
+							<div class="panel-heading">
+								<span><input #itemcb type="checkbox" (change)="addItem = itemcb.checked" />&nbsp;Item</span>
+							</div>
+							<div class="panel-body" *ngIf="addItem">
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="productCode">Product Code</label>
+										<input class="form-control" type="input" name="productCode" id="productCode" [formControl]="productCode">
+									</div>
+									<div class="form-group col-xs-6">
+										<label for="productName">Product Name</label>
+										<input class="form-control" type="text" name="productName" id="productName" [formControl]="productName">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="productSKU">Product SKU</label>
+										<input class="form-control" type="input" name="productSKU" id="productSKU" [formControl]="productSKU">
+									</div>
+									<div class="form-group col-xs-6">
+										<label for="quantity">Quantity</label>
+										<input class="form-control" type="text" name="quantity" id="quantity" [formControl]="quantity">
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="unitPrice">Unit Price</label>
+										<input class="form-control" type="input" name="unitPrice" id="unitPrice" [formControl]="unitPrice" [textMask]="{mask: numberMask}">
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+						<div class="panel panel-default" formGroupName="purchaseTotals">
+							<div class="panel-heading">
+								<span>Currency</span>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="currency">Currency</label>
+										<select class="form-control" name="currency" id="currency" [formControl]="currency">
+                  <option>USD</option>
+                  <option>CAD</option>
+                </select>
+									</div>
+									<div class="form-group col-xs-6">
+										<label for="grandTotalAmount">Total</label>
+										<input class="form-control" type="text" name="grandTotalAmount" id="grandTotalAmount" [formControl]="grandTotalAmount" [textMask]="{mask: numberMask}">
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<button class="btn btn-primary pull-right" type="submit" [disabled]="!paymentForm.valid" (click)='authorize()'>Authorize</button>
+					</div>
+          <!-- Capture form -->
+					<div class="tab-pane fade in" id="2">
+						<div class="panel panel-default" formGroupName="purchaseTotals">
+							<div class="panel-heading">
+								<span>Currency</span>
+							</div>
+							<div class="panel-body">
+								<div class="row">
+									<div class="form-group col-xs-6">
+										<label for="subscriptionID">Request ID</label>
+										<input class="form-control" type="number" name="subscriptionID" id="subscriptionID" [formControl]="subscriptionID">
+									</div>
+									<div class="form-group col-xs-6">
+										<label for="captureAmount">Total</label>
+										<input class="form-control" type="text" name="captureAmount" id="captureAmount" [formControl]="captureAmount" [textMask]="{mask: numberMask}">
+									</div>
+								</div>
+							</div>
+						</div>
+						<button class="btn btn-primary pull-right" type="submit" [disabled]="!paymentForm.valid" (click)='capture()'>Capture</button>
+					</div>
+				</div>
+
+			</form>
+		</div>
+		<div class="col-xs-6">
+			<div class="margin-20">
+				<h4>Request / Response</h4>
+			</div>
+			<div class="panel panel-default" *ngIf='apiResponse!=null'>
+				<div class="panel-heading">
+					<span>Response</span>
+				</div>
+				<div class="panel-body">
+					<pre>{{apiResponse | json}}</pre>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<span>Request</span>
+				</div>
+				<div class="panel-body">
+					<pre>{{paymentForm.value | json}}</pre>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "build/server/app",
+    "watch": true, 
+    "target": "ES5",
+    "module": "commonjs",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "removeComments": false,
+    "noImplicitAny": false
+  },
+  "exclude": [
+    "typings",
+    "node_modules"
+  ]
+}
