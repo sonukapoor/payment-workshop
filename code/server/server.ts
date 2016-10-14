@@ -11,15 +11,14 @@ var env: string = process.env.NODE_ENV || 'development';
 var app = express();
 
 app.use(bodyParser.urlencoded({
-  extended: true
+    extended: true
 }));
 
 app.set('port', port);
 app.use('/app', express.static(path.resolve(__dirname, '../client/src/app')));
 app.use('/libs', express.static(path.resolve(__dirname, '../client/libs')));
 
-app.use(function (req, res, next)
-{
+app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization');
@@ -40,25 +39,24 @@ app.get('/*', renderIndex);
 */
 
 app.post('/api/capture', function (req, res) {
-    console.log("body", req.body);
     var p = new paymentGateway();
     p.capture(req.body, (err, result) => {
         console.log(err, result)
-        if (err)
+        if (err) 
             res.send(err);
-        
+    
         res.send(result);
     });
 });
 
 app.post('/api/authorize', function (req, res) {
-    console.log("body", JSON.parse(req.body));
+    console.log("body", req.body);
     var p = new paymentGateway();
     p.authorize(req.body, (err, result) => {
         console.log(err, result)
         if (err)
             res.send(err);
-        
+
         res.send(result);
     });
 });

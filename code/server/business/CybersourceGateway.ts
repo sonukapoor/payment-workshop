@@ -16,8 +16,7 @@ class CybersourceGateway implements IPaymentGateway {
 		return new Soap.WSSecurity(this.merchantID, this.transactionKey);
 	}
 
-	capture(data: any, callback) {
-		console.log("CC", data);
+	capture(subscription: any, callback) {
 		var merchant = this.merchantID;
 		var ws = this.getSecurity();
 
@@ -26,26 +25,23 @@ class CybersourceGateway implements IPaymentGateway {
 
 			var data = {
 				merchantID: merchant,
-				merchantReferenceCode: "TEST",
+				merchantReferenceCode: subscription.merchantReferenceCode,
 				clientLibrary: 'node.js',
 				purchaseTotals: {
-					currency: "USD",
-					grandTotalAmount: 11.35
+					currency: subscription.currency,
+					grandTotalAmount: subscription.grandTotalAmount,
 				},
 				ccCaptureService: {
 					attributes: {
 						run: true,
 					},
-					authRequestID: "4756900151956784004012"
+					authRequestID: subscription.requestID,
 				}
 			}
 
 			client.runTransaction(data, function (err, result) {
-				if (err) {
-					console.log(err);
-
+				if (err)
 					callback(err, null);
-				}
 
 				callback(null, result);
 			});
@@ -61,21 +57,39 @@ class CybersourceGateway implements IPaymentGateway {
 
 			var data = {
 				merchantID: merchant,
-				merchantReferenceCode: "TEST",
+				merchantReferenceCode: cc.merchantReferenceCode,
 				clientLibrary: 'node.js',
-				billTo: cc.billTo,
+				billTo: {
+					firstName: cc.billTo.firstName,
+					lastName: cc.billTo.lastName,
+					street1: cc.billTo.street1,
+					city: cc.billTo.city,
+					state: cc.billTo.state,
+					postalCode: cc.billTo.postalCode,
+					country: cc.billTo.country,
+					email: cc.billTo.email,
+				},
 				item: {
 					attributes: {
 						id: 0
 					},
-					unitPrice: 10.35,
-					quantity: 2,
-					productCode: '2001',
-					productName: 'Blank T-Shirt',
-					productSKU: "20010102"
+					unitPrice: cc.item.unitPrice,
+					quantity: cc.item.quantity,
+					productCode: cc.item.productCode,
+					productName: cc.item.productName,
+					productSKU: cc.item.productSKU,
 				},
-				purchaseTotals: cc.purchaseTotals,
-				card: cc.card,
+				purchaseTotals: {
+					currency: cc.purchaseTotals.currency,
+					grandTotalAmount: cc.purchaseTotals.grandTotalAmount,
+				},
+				card: {
+					accountNumber: cc.card.accountNumber,
+					expirationMonth: cc.card.expirationMonth,
+					expirationYear: cc.card.expirationYear,
+					cvNumber: cc.card.cvNumber,
+					cardType: cc.card.cardType,
+				},
 				ccAuthService: {
 					attributes: {
 						run: true,

@@ -30,7 +30,6 @@ var renderIndex = (req: express.Request, res: express.Response) => {
 app.get('/*', renderIndex);
 */
 app.post('/api/capture', function (req, res) {
-    console.log("body", req.body);
     var p = new paymentGateway();
     p.capture(req.body, function (err, result) {
         console.log(err, result);
@@ -40,7 +39,7 @@ app.post('/api/capture', function (req, res) {
     });
 });
 app.post('/api/authorize', function (req, res) {
-    console.log("body", JSON.parse(req.body));
+    console.log("body", req.body);
     var p = new paymentGateway();
     p.authorize(req.body, function (err, result) {
         console.log(err, result);

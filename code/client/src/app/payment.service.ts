@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-//import { Person } from './person';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
@@ -13,7 +12,6 @@ export class PaymentService {
   authorize(cc): Observable<any> {
     let body = cc;
     let headers = new Headers();
-    //headers.append('Content-Type', 'application/json');
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
     let options = new RequestOptions({ headers: headers });
 
@@ -53,64 +51,4 @@ export class PaymentService {
     console.error(errMsg); // log to console instead
     return Observable.throw(errMsg);
   }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-function mapPersons(response:Response): Person[]{
-   // The response of the API has a results
-   // property with the actual results
-   return response.json().results.map(toPerson)
-}
-
-function toPerson(r:any): Person{
-  let person = <Person>({
-    id: extractId(r),
-    url: r.url,
-    name: r.name,
-    weight: r.mass,
-    height: r.height,
-  });
-  console.log('Parsed person:', person);
-  return person;
-}
-
-// to avoid breaking the rest of our app
-// I extract the id from the person url
-function extractId(personData:any){
- let extractedId = personData.url.replace('http://swapi.co/api/people/','').replace('/','');
- return parseInt(extractedId);
-}
-
-function mapPerson(response:Response): Person{
-   // toPerson looks just like in the previous example
-   return toPerson(response.json());
-}
-*/
-
-// this could also be a private method of the component class
-function handleError(error: any) {
-  // log error
-  // could be something more sofisticated
-  let errorMsg = error.message || `Yikes! There was was a problem with our hyperdrive device and we couldn't retrieve your data!`
-  console.error(errorMsg);
-
-  // throw an application level error
-  return Observable.throw(errorMsg);
 }
