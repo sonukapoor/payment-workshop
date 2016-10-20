@@ -10,33 +10,43 @@
 				<h4>{{title}}</h4>
 			</div>
 			<form [formGroup]="paymentForm">
-
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<span>Payment Processor</span>
 					</div>
 					<div class="panel-body">
-						<div class="form-group col-xs-6">
-							<select class="form-control">
+						<div class="row">
+							<div class="form-group col-xs-6">
+								<label>Payment Gateway</label>
+								<select class="form-control">
                 <option>Cybersource</option>
                 <option>Paypal</option>
                 <option>BrainTree</option>
               </select>
+							</div>
+							<div class="form-group col-xs-6">
+								<label for="merchantReferenceCode">Reference #</label>
+								<input class="form-control" type="text" name="merchantReferenceCode" id="merchantReferenceCode" [formControl]="merchantReferenceCode"
+									(keyup)="setSubscription()">
+								<div [hidden]="merchantReferenceCode.valid || merchantReferenceCode.untouched" class="text-danger">
+									<small [hidden]="!merchantReferenceCode.hasError('required')">Reference # name is required.</small>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 
 				<ul class="nav nav-tabs">
 					<li class="active">
-						<a href="#1" data-toggle="tab">Authorize</a>
+						<a href="#1" data-toggle="tab" (click)='selectedTransactionType = TransactionTypes.AUTHORIZE'>Authorize</a>
 					</li>
 					<li class="nav">
-						<a href="#2" data-toggle="tab">Capture</a>
+						<a href="#2" data-toggle="tab" (click)='selectedTransactionType = TransactionTypes.CAPTURE'>Capture</a>
 					</li>
 				</ul>
 
 				<div class="tab-content ">
-          <!-- Authorize Form -->
+					<!-- Authorize Form -->
 					<div class="tab-pane fade in active" id="1">
 						<div class="panel panel-default" formGroupName="billTo">
 							<div class="panel-heading">
@@ -191,9 +201,9 @@
 									<div class="form-group col-xs-6">
 										<label for="currency">Currency</label>
 										<select class="form-control" name="currency" id="currency" [formControl]="currency">
-                  <option>USD</option>
-                  <option>CAD</option>
-                </select>
+                  		<option>USD</option>
+                  		<option>CAD</option>
+										</select>
 									</div>
 									<div class="form-group col-xs-6">
 										<label for="grandTotalAmount">Total</label>
@@ -205,7 +215,7 @@
 
 						<button class="btn btn-primary pull-right" type="submit" [disabled]="!paymentForm.valid" (click)='authorize()'>Authorize</button>
 					</div>
-          <!-- Capture form -->
+					<!-- Capture form -->
 					<div class="tab-pane fade in" id="2">
 						<div class="panel panel-default" formGroupName="purchaseTotals">
 							<div class="panel-heading">
@@ -215,8 +225,17 @@
 								<div class="row">
 									<div class="form-group col-xs-6">
 										<label for="subscriptionID">Request ID</label>
-										<input class="form-control" type="number" name="subscriptionID" id="subscriptionID" [formControl]="subscriptionID">
+										<input class="form-control" type="text" name="subscriptionID" id="subscriptionID" [formControl]="subscriptionID" >
 									</div>
+									<div class="form-group col-xs-6">
+										<label for="captureCurrency">Currency</label>
+										<select class="form-control" name="captureCurrency" id="captureCurrency" [formControl]="captureCurrency">
+                  		<option>USD</option>
+                  		<option>CAD</option>
+										</select>
+									</div>
+								</div>
+								<div class="row">
 									<div class="form-group col-xs-6">
 										<label for="captureAmount">Total</label>
 										<input class="form-control" type="text" name="captureAmount" id="captureAmount" [formControl]="captureAmount" [textMask]="{mask: numberMask}">
@@ -224,7 +243,8 @@
 								</div>
 							</div>
 						</div>
-						<button class="btn btn-primary pull-right" type="submit" [disabled]="!paymentForm.valid" (click)='capture()'>Capture</button>
+						<button class="btn btn-primary pull-right" type="submit" [disabled]="subscriptionID.value == '' || captureAmount.value == ''"
+							(click)='capture()'>Capture</button>
 					</div>
 				</div>
 
@@ -242,12 +262,25 @@
 					<pre>{{apiResponse | json}}</pre>
 				</div>
 			</div>
-			<div class="panel panel-default">
+			<!-- 
+				ToDo:
+				Why is selectedTransactionType == TransactionTypes.AUTHORIZE on its own not working?
+				@Rangle - Can this assignment be done in a better way? 
+			-->
+			<div class="panel panel-default" *ngIf="selectedTransactionType == TransactionTypes.AUTHORIZE || selectedTransactionType == 0">
 				<div class="panel-heading">
-					<span>Request</span>
+					<span>Authorize Request</span>
 				</div>
 				<div class="panel-body">
 					<pre>{{paymentForm.value | json}}</pre>
+				</div>
+			</div>
+			<div class="panel panel-default" *ngIf="selectedTransactionType == TransactionTypes.CAPTURE">
+				<div class="panel-heading">
+					<span>Capture Request</span>
+				</div>
+				<div class="panel-body">
+					<pre>{{ captureFields.value | json }}</pre>
 				</div>
 			</div>
 
