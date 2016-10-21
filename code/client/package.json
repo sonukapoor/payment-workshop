@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.2.30",
-    "angular-cli": "1.0.0-beta.16",
+    "angular-cli": "^1.0.0-beta.16",
     "angular2-text-mask": "^0.22.0",
     "codelyzer": "~0.0.26",
     "jasmine-core": "2.4.1",
@@ -42,6 +42,8 @@
     "text-mask-addons": "^0.7.2",
     "ts-node": "1.2.1",
     "tslint": "3.13.0",
-    "typescript": "2.0.2"
+    "typescript": "2.0.2",
+    "webpack": "^2.1.0-beta.22",
+    "webpack-dev-server": "^2.1.0-beta.3"
   }
 }
