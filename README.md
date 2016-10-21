@@ -16,17 +16,22 @@ The CyberSource merchant id and transaction key are stored in the CyberSourceGat
 
 ## To get started
 
+```bash
+cd payment-workshop
+npm install
+```
+
 Start the server:
 
 ```bash
-cd cybersource/code/server/build/server/app
+cd payment-workshop/code/server/build/server/app
 node server.js
 ```
 
 Start the client:
 
 ```bash
-cd cybersource/code/client
+cd payment-workshop/code/client
 ng serve
 ```
 
