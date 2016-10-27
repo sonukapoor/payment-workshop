@@ -200,6 +200,11 @@ export class AppComponent {
   }
 
   authorize() {
+    let monthYear = this.expirationMonth.value;
+    let month = monthYear.split("/")[0];
+    let year = monthYear.split("/")[1];
+    this.paymentForm.patchValue({ card: { expirationYear: year } });
+
     this.paymentService.authorize(this.paymentForm.value)
       .subscribe(
       result => {
