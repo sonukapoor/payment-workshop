@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
@@ -6,23 +6,23 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class PaymentService {
   private baseUrl: string = 'http://localhost:8000/api';
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new Headers({ 'Content-Type': 'application/json' });
 
-  constructor(private http: Http) {
+  constructor( @Inject(Http) private http: Http) {
   }
 
   authorize(cc): Observable<any> {
     let body = cc;
-    
+
     let monthYear = cc.card.expirationMonth;
     let month = monthYear.split("/")[0];
-    let year  = monthYear.split("/")[1];
+    let year = monthYear.split("/")[1];
 
     cc.card.expirationMonth = month;
     cc.card.expirationYear = year;
 
     return this.http
-      .post(`${this.baseUrl}/authorize`, JSON.stringify(body), {headers: this.headers})
+      .post(`${this.baseUrl}/authorize`, JSON.stringify(body), { headers: this.headers })
       .map(res => res.json())
       .catch(this.handleError);
   }
@@ -30,7 +30,7 @@ export class PaymentService {
   capture(subscription): Observable<any> {
     let body = subscription;
     return this.http
-      .post(`${this.baseUrl}/capture`, JSON.stringify(body), {headers: this.headers})
+      .post(`${this.baseUrl}/capture`, JSON.stringify(body), { headers: this.headers })
       .map(res => res.json())
       .catch(this.handleError);
   }

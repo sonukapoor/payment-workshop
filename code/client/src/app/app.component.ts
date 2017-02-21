@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ValidationService } from './validation.service';
 import { PaymentService } from './payment.service';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask.js'
 import { TransactionType } from './shared/TransactionType'
 
 @Component({
@@ -16,11 +15,6 @@ export class AppComponent {
 
   public TransactionTypes: typeof TransactionType = TransactionType;
   selectedTransactionType: TransactionType;
-
-  numberMask = createNumberMask({
-    prefix: '',
-    suffix: '  $'
-  })
 
   paymentForm: FormGroup;
   merchantReferenceCode: FormControl;
@@ -61,7 +55,7 @@ export class AppComponent {
   captureAmount: FormControl;
   captureCurrency: FormControl;
 
-  constructor(private builder: FormBuilder, private paymentService: PaymentService) {
+  constructor(private builder: FormBuilder, @Inject(PaymentService) private paymentService: PaymentService) {
 
     this.selectedTransactionType = TransactionType.AUTHORIZATION;
     this.merchantReferenceCode = new FormControl('TEST', [Validators.required]);
